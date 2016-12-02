@@ -1986,6 +1986,32 @@ if __name__ == '__main__':
                 </section>
                 <section data-markdown>
                     <script type="text/template">
+                        ####Echo server
+
+
+                        ```python
+async def echo_server(address):
+    sock = socket(AF_INET, SOCK_STREAM)
+    sock.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
+    sock.bind(address)
+    sock.listen(5)
+    async with sock:
+        while True:
+            client, addr = await sock.accept()
+            await spawn(echo_client(client, addr))
+
+async def echo_client(client, addr):
+    async with client:
+         while True:
+             data = await client.recv(1000)
+             if not data:
+                 break
+             await client.sendall(data)
+                        ```
+                    </script>
+                </section>
+                <section data-markdown>
+                    <script type="text/template">
                         ####Async Subprocess
 
 
